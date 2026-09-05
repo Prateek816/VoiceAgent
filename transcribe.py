@@ -5,6 +5,8 @@ import time
 from urllib.parse import urlencode
 
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 import websocket
 
 API_KEY = os.environ["ASSEMBLYAI_API_KEY"]
@@ -42,6 +44,7 @@ def on_open(ws):
 
 def on_message(ws, message):
     data = json.loads(message)
+    print(data)
     if data.get("type") == "Turn":
         print(data.get("transcript", ""), end="\n" if data.get("end_of_turn") else "\r")
 
@@ -80,7 +83,7 @@ def main():
     except KeyboardInterrupt:
         stop.set()
         if ws.sock and ws.sock.connected:
-            ws.send(json.dumps({"type": "Terminate"}))  # close the session
+            ws.send(json.dumps({"type": "Terminate"}))  
         ws.close()
 
 
